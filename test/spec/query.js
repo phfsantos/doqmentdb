@@ -81,10 +81,14 @@ describe('QueryBuilder', function() {
     });
 
     it('should work with symbols($in, $be) IN and BETWEEN', function() {
-      query.build({ id: {$in: [1, 2, 3]}}).should.eql(BQ + 'r.id IN (1, 2, 3)');
+      query.build({ id: {$in: [1, 2, 3]}}).should.eql(BQ + 'r.id IN (\'1\',\'2\',\'3\')');
       query.build({ id: {$in: "1, 2, 3"}}).should.eql(BQ + 'r.id IN (1, 2, 3)');
       query.build({ id: {$be: "\"1\" AND \"3\""}}).should.eql(BQ + '(r.id BETWEEN "1" AND "3")');
       query.build({ id: {$be: [1, 3]}}).should.eql(BQ + '(r.id BETWEEN "1" AND "3")');
+    });
+
+    it('should allow to create objects with arrays', function() {
+      query.build({ allows: [1, 2, 3]}).should.eql(BQ + 'r.allows=[1,2,3]');
     });
 
     it('should handle strings correctly', function() {
